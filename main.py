@@ -15,7 +15,7 @@ config=Config()
 
 parse=argparse.ArgumentParser()
 
-parse.add_argument('--mode',default='train',help='train/valid/test')
+parse.add_argument('--mode',default='test',help='train/valid/test')
 parse.add_argument('--cuda',default=False)
 args=parse.parse_args()
 
@@ -23,6 +23,11 @@ mode=args.mode
 device=torch.device("cuda" if args.cuda else "cpu")
 
 model=model.ParserModel(config)
+if mode=="test":
+    print("loading model...")
+    state_dict=torch.load(open(config.model,'rb'))
+    model.load_state_dict(state_dict)
+
 
 def get_batch(input_data,y,batch_start,batch_size):
     '''
@@ -139,17 +144,47 @@ def train(input_data,y,dev_data,batch_size=config.batch_size):
             torch.save(model.state_dict(),best_model_file)
 
 
+def test(test_data,batch_size=config.batch_size):
+    model.eval()
+    all_sentence = []
+    sentence2id = {}
+    for i, items in enumerate(test_data):
+        n_words = len(items["word"]) - 1
+        sentence = [j + 1 for j in range(n_words)]
+        all_sentence.append(sentence)
+        sentence2id[id(sentence)] = i
+
+    decoding = Decoding(test_data, sentence2id, model, device)
+    dep = decoding.batch_parse(all_sentence, batch_size)
+
+    print("calculate UAS......")
+    UAS = all_items = 0.0
+    for i, items in enumerate(test_data):
+        head = [-1] * len(items["word"])
+        for h, t in dep[i]:
+            head[t] = h
+        for pred_h, gold_h in zip(head[1:], items["head"][1:]):
+            UAS += 1 if pred_h == gold_h else 0
+            all_items += 1
+    UAS /= all_items
+    print("test UAS : %.3f"%UAS)
+
+
 if __name__=="__main__":
 
     feature=prepare_feature.Feature(config)
 
-    print("loading training data.....")
-    train_data=feature.read_data(config.train_data_file)
-    print("loading dev data.....")
-    dev_data=feature.read_data(config.dev_data_file)
-    input_data,t_input=feature.create_data(train_data)
     if mode=='train':
+        print("loading training data.....")
+        train_data = feature.read_data(config.train_data_file)
+        print("loading dev data.....")
+        dev_data = feature.read_data(config.dev_data_file)
+        input_data, t_input = feature.create_data(train_data)
         train(input_data,t_input,dev_data)
+    elif mode=="test":
+        print("loading test data.....")
+        test_data = feature.read_data(config.test_data_file)
+        test(test_data)
 
 
 

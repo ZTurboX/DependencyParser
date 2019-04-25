@@ -2,8 +2,6 @@ import json
 
 import const
 
-
-
 class Feature():
     def __init__(self,cfg:const.Config):
         self.transition=['L','R','S']
@@ -99,6 +97,11 @@ class Feature():
         #return [word_features,pos_features,label_features],features
         return features
 
+    def legal_labels(self, stack, buffer):
+        labels = ([1] if len(stack) > 2 else [0])
+        labels += ([1] if len(stack) >= 2 else [0])
+        labels += [1] if len(buffer) > 0 else [0]
+        return labels
 
     def create_data(self,data):
 

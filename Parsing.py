@@ -45,9 +45,11 @@ class Decoding(object):
         x=[feature.create_features(p.stack,p.buffer,p.dep,self.dataset[self.sentence2id[id(p.sentence)]]) for p in parsers]
         x=np.array(x).astype('int32')
         x=torch.from_numpy(x).long().to(self.device)
+        l=[feature.legal_labels(p.stack, p.buffer) for p in parsers]
         predict_logits=self.model(x)
         predict_logits=predict_logits.detach().numpy()
-        predict=np.argmax(predict_logits,1)
+        #predict=np.argmax(predict_logits,1)
+        predict = np.argmax(predict_logits+ 10000 * np.array(l).astype('float32'), 1)
         predict=["S" if p==2 else ("L" if p==0 else "R") for p in predict]
         return predict
 

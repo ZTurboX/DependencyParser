@@ -21,3 +21,5 @@ class Config:
         self.words_number=len(self.vocab)
 
         self.model_file=os.path.join(data_home,'output')
+
+        self.model=os.path.join(data_home,'model','model.pt')
