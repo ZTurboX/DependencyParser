@@ -12,7 +12,6 @@ from Parsing import Parser,Decoding
 
 
 config=Config()
-
 parse=argparse.ArgumentParser()
 
 parse.add_argument('--mode',default='test',help='train/valid/test')
@@ -30,6 +29,7 @@ if mode=="test":
 
 
 def get_batch(input_data,y,batch_start,batch_size):
+
     '''
     word_input_batch=word_input[batch_start:batch_start+batch_size]
     pos_input_batch=pos_input[batch_start:batch_start+batch_size]
@@ -39,19 +39,21 @@ def get_batch(input_data,y,batch_start,batch_size):
     word_input_batch=np.array(word_input_batch)
     pos_input_batch=np.array(pos_input_batch)
     label_input_batch=np.array(label_input_batch)
-    y_batch=np.array(y_batch)
+
 
     word_input_batch=torch.LongTensor(word_input_batch).to(device)
     pos_input_batch=torch.LongTensor(pos_input_batch).to(device)
     label_input_batch=torch.LongTensor(label_input_batch).to(device)
-    y_batch=torch.LongTensor(y_batch).to(device)
     '''
+
+
 
     input_batch=input_data[batch_start:batch_start+batch_size]
     y_batch = y[batch_start:batch_start + batch_size]
 
     input_batch = np.array(input_batch)
     input_batch = torch.LongTensor(input_batch).to(device)
+
 
     y_batch=np.array(y_batch)
     y=np.zeros((y_batch.size,3))
@@ -66,21 +68,21 @@ def train_step(input_data,y,optimizer,criterion,dev_data,batch_size=config.batch
     count=0
     total_loss=0
     for i in range(0, len(y), batch_size):
+        optimizer.zero_grad()
+        loss = 0
         '''
         word_input = input_data[0]
         pos_input = input_data[1]
         label_input = input_data[2]
-        word_input_batch, pos_input_batch, label_input_batch, y_batch = get_batch(word_input, pos_input, label_input, y,i,batch_size)
         '''
+
+        input_batch, y_batch = get_batch(input_data, y,i,batch_size)
+
         print("run minibatch :%d "%i)
 
-        input_batch,y_batch=get_batch(input_data,y,i,batch_size)
+        #input_batch,y_batch=get_batch(input_data,y,i,batch_size)
         y_batch=torch.from_numpy(y_batch.nonzero()[1]).long().to(device)
-
-        optimizer.zero_grad()
-        loss=0
         y_predict_logits=model(input_batch)
-        optimizer.zero_grad()
         loss=criterion(y_predict_logits,y_batch)
         loss.backward()
         optimizer.step()
@@ -129,6 +131,7 @@ def dev_step(dev_data,batch_size=config.batch_size):
 def train(input_data,y,dev_data,batch_size=config.batch_size):
     best_UAS=0
     optimizer=optim.Adam(model.parameters())
+    #optimizer = optim.Adagrad(model.parameters())
     criterion=torch.nn.CrossEntropyLoss()
     print("start train.....")
     for i in range(config.epoch_size):
@@ -173,7 +176,6 @@ def test(test_data,batch_size=config.batch_size):
 if __name__=="__main__":
 
     feature=prepare_feature.Feature(config)
-
     if mode=='train':
         print("loading training data.....")
         train_data = feature.read_data(config.train_data_file)

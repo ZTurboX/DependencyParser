@@ -30,7 +30,7 @@ class Feature():
 
         if s2>0 and h2==s1:
             return 0
-        elif s1>0 and h1==s2 and (not any([x for x in buffer if item["head"][x]==s1])):
+        elif s2>=0 and h1==s2 and (not any([x for x in buffer if item["head"][x]==s1])):
             return 1
         else:
             return None if len(buffer)==0 else 2
@@ -94,12 +94,12 @@ class Feature():
         features+=pos_features
         features+=label_features
 
-        #return [word_features,pos_features,label_features],features
+        #return word_features,pos_features,label_features
         return features
 
     def legal_labels(self, stack, buffer):
-        labels = ([1] if len(stack) > 2 else [0])
-        labels += ([1] if len(stack) >= 2 else [0])
+        labels = [1] if len(stack) > 2 else [0]
+        labels += [1] if len(stack) >= 2 else [0]
         labels += [1] if len(buffer) > 0 else [0]
         return labels
 
@@ -127,12 +127,14 @@ class Feature():
                 elif gold_t==1:
                     arcs.append((stack[-2],stack[-1],gold_t))
                     stack=stack[:-1]
+
                 '''
                 words_input.append(word_features)
                 pos_input.append(pos_features)
                 label_input.append(label_features)
                 t_input.append(gold_t)
                 '''
+
                 input.append(features)
                 t_input.append(gold_t)
 

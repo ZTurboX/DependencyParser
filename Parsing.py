@@ -42,9 +42,34 @@ class Decoding(object):
         self.device=device
 
     def predict(self,parsers):
+        '''
+        w_input=[]
+        p_input=[]
+        l_input=[]
+        for p in parsers:
+            word_features, pos_features, label_features=feature.create_features(p.stack, p.buffer, p.dep, self.dataset[self.sentence2id[id(p.sentence)]])
+            w_input.append(word_features)
+            p_input.append(pos_features)
+            l_input.append(label_features)
+        '''
+
+
         x=[feature.create_features(p.stack,p.buffer,p.dep,self.dataset[self.sentence2id[id(p.sentence)]]) for p in parsers]
         x=np.array(x).astype('int32')
         x=torch.from_numpy(x).long().to(self.device)
+
+
+        '''
+        w_input=np.array(w_input).astype('int32')
+        p_input = np.array(p_input).astype('int32')
+        l_input = np.array(l_input).astype('int32')
+
+        w_input=torch.from_numpy(w_input).long().to(self.device)
+        p_input=torch.from_numpy(p_input).long().to(self.device)
+        l_input = torch.from_numpy(l_input).long().to(self.device)
+        '''
+
+
         l=[feature.legal_labels(p.stack, p.buffer) for p in parsers]
         predict_logits=self.model(x)
         predict_logits=predict_logits.detach().numpy()
