@@ -14,7 +14,7 @@ from Parsing import Parser,Decoding
 config=Config()
 parse=argparse.ArgumentParser()
 
-parse.add_argument('--mode',default='test',help='train/valid/test')
+parse.add_argument('--mode',default='train',help='train/valid/test')
 parse.add_argument('--cuda',default=False)
 args=parse.parse_args()
 

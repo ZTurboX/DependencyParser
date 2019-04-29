@@ -36,10 +36,10 @@ class Feature():
             return None if len(buffer)==0 else 2
 
     def get_left_child(self,item,arcs):
-        return sorted([arc[1] for arc in arcs if arcs[0]==item and arc[1]<item])
+        return sorted([arc[1] for arc in arcs if arc[0]==item and arc[1]<item])
 
     def get_right_child(self,item,arcs):
-        return sorted([arcs[1] for arc in arcs if arcs[0]==item and arc[1]>item],reverse=True)
+        return sorted([arc[1] for arc in arcs if arc[0]==item and arc[1]>item],reverse=True)
 
 
     def create_features(self,stack,buffer,arcs,item):
@@ -62,8 +62,8 @@ class Feature():
                 s=stack[-i-1]
                 lc=self.get_left_child(s,arcs)
                 rc=self.get_right_child(s,arcs)
-                llc=self.get_left_child(lc[0]) if len(lc)>0 else []
-                rrc=self.get_right_child(rc[0]) if len(rc)>0 else []
+                llc=self.get_left_child(lc[0],arcs) if len(lc)>0 else []
+                rrc=self.get_right_child(rc[0],arcs) if len(rc)>0 else []
 
                 word_features.append(item["word"][lc[0]] if len(lc)>0 else self.vocab["<NULL>"])
                 word_features.append(item["word"][rc[0]] if len(rc) > 0 else self.vocab["<NULL>"])
@@ -82,7 +82,7 @@ class Feature():
                 label_features.append(item["label"][lc[0]] if len(lc)>0 else self.vocab["<l><NULL>"])
                 label_features.append(item["label"][rc[0]] if len(rc) > 0 else self.vocab["<l><NULL>"])
                 label_features.append(item["label"][lc[1]] if len(lc) > 1 else self.vocab["<l><NULL>"])
-                label_features.append(item["label"][rc[1]] if len(rc) > 0 else self.vocab["<l><NULL>"])
+                label_features.append(item["label"][rc[1]] if len(rc) > 1 else self.vocab["<l><NULL>"])
                 label_features.append(item["label"][llc[0]] if len(llc) > 0 else self.vocab["<l><NULL>"])
                 label_features.append(item["label"][rrc[0]] if len(rrc) > 0 else self.vocab["<l><NULL>"])
             else:
