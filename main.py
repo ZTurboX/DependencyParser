@@ -14,7 +14,7 @@ from Parsing import Parser,Decoding
 config=Config()
 parse=argparse.ArgumentParser()
 
-parse.add_argument('--mode',default='train',help='train/valid/test')
+parse.add_argument('--mode',default='test',help='train/valid/test')
 parse.add_argument('--cuda',default=False)
 args=parse.parse_args()
 
@@ -130,7 +130,7 @@ def dev_step(dev_data,batch_size=config.batch_size):
 
 def train(input_data,y,dev_data,batch_size=config.batch_size):
     best_UAS=0
-    optimizer=optim.Adam(model.parameters())
+    optimizer=optim.Adagrad(model.parameters(),lr=0.01,weight_decay=1e-8)
     #optimizer = optim.Adagrad(model.parameters())
     criterion=torch.nn.CrossEntropyLoss()
     print("start train.....")

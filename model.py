@@ -55,7 +55,7 @@ class ParserModel(nn.Module):
         #self.word_embedding.weight.requires_grad=True
 
         self.hidden_layer=nn.Linear(self.embedding_size*48,self.hidden_size)
-        self.cube = Cube(self.embedding_size * 18, self.embedding_size * 18, self.embedding_size * 12, self.hidden_size)
+        #self.cube = Cube(self.embedding_size * 18, self.embedding_size * 18, self.embedding_size * 12, self.hidden_size)
         self.out=nn.Linear(self.hidden_size,3)
 
 
@@ -79,11 +79,12 @@ class ParserModel(nn.Module):
         x=self.word_embedding(input_data)
         x=x.view(x.size()[0],-1)
         x=self.hidden_layer(x)
-        hidden=torch.pow(x,3)
+        #hidden=torch.pow(x,3)
+        hidden=F.relu(x)
         hidden = self.dropout(hidden)
 
         '''
-         w=self.word_embedding(w_input)
+        w=self.word_embedding(w_input)
         p=self.word_embedding(p_input)
         l=self.word_embedding(l_input)
 

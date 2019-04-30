@@ -12,7 +12,7 @@ class Config:
         self.vector_file=os.path.join(data_home,'vectors-100.txt')
 
         self.embedding_size=100
-        self.batch_size=2048
+        self.batch_size=1024
         self.dropout=0.5
         self.hidden_size=200
         self.epoch_size=100
