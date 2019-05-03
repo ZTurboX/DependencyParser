@@ -43,7 +43,7 @@ class Decoding(object):
 
     def predict(self,parsers):
         '''
-        w_input=[]
+         w_input=[]
         p_input=[]
         l_input=[]
         for p in parsers:
@@ -51,6 +51,7 @@ class Decoding(object):
             w_input.append(word_features)
             p_input.append(pos_features)
             l_input.append(label_features)
+
         '''
 
 
@@ -58,9 +59,8 @@ class Decoding(object):
         x=np.array(x).astype('int32')
         x=torch.from_numpy(x).long().to(self.device)
 
-
         '''
-        w_input=np.array(w_input).astype('int32')
+         w_input=np.array(w_input).astype('int32')
         p_input = np.array(p_input).astype('int32')
         l_input = np.array(l_input).astype('int32')
 
@@ -68,7 +68,6 @@ class Decoding(object):
         p_input=torch.from_numpy(p_input).long().to(self.device)
         l_input = torch.from_numpy(l_input).long().to(self.device)
         '''
-
 
         l=[feature.legal_labels(p.stack, p.buffer) for p in parsers]
         predict_logits=self.model(x)

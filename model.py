@@ -75,13 +75,13 @@ class ParserModel(nn.Module):
 
 
     def forward(self,input_data):
-
         x=self.word_embedding(input_data)
         x=x.view(x.size()[0],-1)
+        x = self.dropout(x)
         x=self.hidden_layer(x)
         #hidden=torch.pow(x,3)
         hidden=F.relu(x)
-        hidden = self.dropout(hidden)
+
 
         '''
         w=self.word_embedding(w_input)

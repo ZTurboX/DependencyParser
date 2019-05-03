@@ -44,8 +44,8 @@ def get_batch(input_data,y,batch_start,batch_size):
     word_input_batch=torch.LongTensor(word_input_batch).to(device)
     pos_input_batch=torch.LongTensor(pos_input_batch).to(device)
     label_input_batch=torch.LongTensor(label_input_batch).to(device)
-    '''
 
+    '''
 
 
     input_batch=input_data[batch_start:batch_start+batch_size]
@@ -70,11 +70,13 @@ def train_step(input_data,y,optimizer,criterion,dev_data,batch_size=config.batch
     for i in range(0, len(y), batch_size):
         optimizer.zero_grad()
         loss = 0
+
         '''
         word_input = input_data[0]
         pos_input = input_data[1]
         label_input = input_data[2]
         '''
+
 
         input_batch, y_batch = get_batch(input_data, y,i,batch_size)
 
