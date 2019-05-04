@@ -70,7 +70,6 @@ class ParserModel(nn.Module):
         for word in self.vocab:
             if word in words_vectors:
                 embeddding_matrix[self.vocab[word]]=words_vectors[word]
-        #self.word_embedding.weight.data.copy_(torch.from_numpy(embeddding_matrix))
         self.word_embedding.weight=nn.Parameter(torch.tensor(embeddding_matrix))
 
 

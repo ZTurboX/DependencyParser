@@ -77,7 +77,6 @@ def train_step(input_data,y,optimizer,criterion,dev_data,batch_size=config.batch
         label_input = input_data[2]
         '''
 
-
         input_batch, y_batch = get_batch(input_data, y,i,batch_size)
 
         print("run minibatch :%d "%i)
@@ -133,7 +132,6 @@ def dev_step(dev_data,batch_size=config.batch_size):
 def train(input_data,y,dev_data,batch_size=config.batch_size):
     best_UAS=0
     optimizer=optim.Adagrad(model.parameters(),lr=0.01,weight_decay=1e-8)
-    #optimizer = optim.Adagrad(model.parameters())
     criterion=torch.nn.CrossEntropyLoss()
     print("start train.....")
     for i in range(config.epoch_size):
