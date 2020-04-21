@@ -57,6 +57,8 @@ class Feature():
         (1)stack和buffer的前3个单词:s1、s2、s3、b1、b2、b3;
         (2)栈顶两个单词的第一个和第二个最左边/最右边的子单词:lc1(si)， rc1(si)， lc2(si)， rc2(si)， i = 1,2。
         (3)最左边的最左边/最右边的最右边——堆栈上最上面两个单词的大多数子元素:lc1(lc1(si))、rc1(rc1(si))、i = 1,2。
+
+        word features + pos features + label features 共计48个特征
         '''
 
         if stack[0] == '<ROOT>':

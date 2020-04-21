@@ -10,6 +10,11 @@ import math
 
 class ParserModel(nn.Module):
     def __init__(self, config: const.Config):
+        """
+        @param embeddings (Tensor): word embeddings (words_number, embedding_size)
+        @param hidden_size (int): number of hidden units
+        @param dropout (float): dropout probability
+        """
         super(ParserModel, self).__init__()
         self.hidden_size = config.hidden_size
         self.embedding_size = config.embedding_size
@@ -27,6 +32,9 @@ class ParserModel(nn.Module):
         self.out = nn.Linear(self.hidden_size, 3)
 
     def load_pretrained_embedding(self, config: const.Config):
+        '''
+        加载预训练词向量
+        '''
         words_vectors = {}
         for line in open(config.vector_file, encoding='utf-8').readlines():
             items = line.strip().split()
