@@ -1,7 +1,8 @@
 ## implement of "A Fast and Accurate Dependency Parser using Neural Networks "
 
 ### 0. 环境
-- python3.6
+- python 3.6
+- pytorch 1.1.0
 
 ### 1. run code
 
